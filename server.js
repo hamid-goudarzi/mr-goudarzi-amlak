@@ -3,6 +3,11 @@ const indexRouter = require("./routes/indexRouter");
 const app =express()
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
+var cors = require('cors')
+
+//  todo
+app.use(cors())
+ 
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
