@@ -1,14 +1,15 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";  
 import axios from "axios";
 import { useRouter } from "next/router";
 
-const SignUpForm = () => {
+const LoginForm = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
     email: "",
     password: "",
   });
+  const dispatch = useDispatch(); 
+
   const router = useRouter();
   const handleChange = (e) => {
     setFormData({
@@ -23,13 +24,12 @@ const SignUpForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/auth/signup",
+        "http://localhost:5000/auth/login",
         formData
       );
-      // Handle successful response (e.g., redirect or show success message)
-      console.log(response.data);
-      // Redirect to the login page after successful signup
-      router.push("/login");
+      
+      dispatch(login(response.data));
+      router.push("/home");
     } catch (error) {
       console.error("Error creating account:", error.message);
     }
@@ -37,43 +37,7 @@ const SignUpForm = () => {
 
   return (
     <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-      <div>
-        <label
-          htmlFor="firstName"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          First Name
-        </label>
-        <input
-          type="text"
-          name="firstName"
-          id="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="John"
-          required
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="lastName"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Last Name
-        </label>
-        <input
-          type="text"
-          name="lastName"
-          id="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Doe"
-          required
-        />
-      </div>
+      
       <div>
         <label
           htmlFor="email"
@@ -115,10 +79,10 @@ const SignUpForm = () => {
         type="submit"
         className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
       >
-        Create an account
+        Login
       </button>
     </form>
   );
 };
 
-export default SignUpForm;
+export default LoginForm;
