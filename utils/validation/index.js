@@ -12,6 +12,10 @@ const userValidateSchema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')).required(),
 });
+const loginValidateSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')).required(),
+});
 
 const orderValidateSchema = Joi.object({
     title: Joi.string().required(),
@@ -21,5 +25,6 @@ const orderValidateSchema = Joi.object({
 
 module.exports = {
     userValidateSchema,
+    loginValidateSchema,
     orderValidateSchema
 }
