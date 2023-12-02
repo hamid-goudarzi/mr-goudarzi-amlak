@@ -15,9 +15,10 @@ const login = async (req, res) => {
             const verifyPass = await bcrypt.compare(password, user.password)
             if (verifyPass) {
                 const token = jwt.sign({ userId: user._id , role: user.role},
-                     "GOODarzi@!^)2309", { expiresIn: "15d" })
+                    process.env.SECRET_KEY , { expiresIn: "15d" })
 
-                return res.send({ message: "You logged", token })
+                return res.send({ message: "You logged", token, 
+                user: { firstName: user.firstName, lastName: user.lastName, email: user.email } })
 
             }
             return res.send({ message: "email or password is not correct!!!" })

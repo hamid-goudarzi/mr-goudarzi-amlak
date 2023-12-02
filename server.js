@@ -9,6 +9,9 @@ var cors = require('cors')
 app.use(cors())
  
 
+
+
+require('dotenv').config()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 

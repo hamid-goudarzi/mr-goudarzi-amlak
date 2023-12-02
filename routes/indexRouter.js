@@ -5,5 +5,5 @@ const authRouter= require("./authRouter")
 
 indexRouter.use(authRouter)
 indexRouter.get("/",index)
-indexRouter.get("*", route404)
+indexRouter.use("*", route404)
 module.exports=indexRouter
