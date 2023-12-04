@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosConfig from "../utils/axiosConfig";
 import { useRouter } from "next/router";
 
 const SignUpForm = () => {
+  const axiosInstance = axiosConfig();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -22,10 +23,11 @@ const SignUpForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/auth/signup",
+      const response = await axiosInstance.post(
+        "/auth/signup",
         formData
       );
+
       // Handle successful response (e.g., redirect or show success message)
       console.log(response.data);
       // Redirect to the login page after successful signup

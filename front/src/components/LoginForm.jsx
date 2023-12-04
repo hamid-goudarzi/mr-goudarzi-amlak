@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";  
-import axios from "axios";
 import { useRouter } from "next/router";
 import { login } from "../redux/slice/userSlice";
+import axiosConfig from "../utils/axiosConfig";
 
 const LoginForm = () => {
+  const axiosInstance = axiosConfig();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -24,8 +25,8 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/auth/login",
+      const response = await axiosInstance.post(
+        "/auth/login",
         formData
       );
       

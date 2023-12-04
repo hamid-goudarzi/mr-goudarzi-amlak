@@ -4,5 +4,5 @@ import { metadata } from "../utils/constants";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
-  return <>{children}</>;
+  return <div className={inter.className}>{children}</div>;
 }

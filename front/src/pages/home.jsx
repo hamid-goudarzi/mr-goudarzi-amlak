@@ -1,9 +1,10 @@
-import React from 'react'
+import Image from "next/image";
+import Header from "../components/layout/Header";
 
-const Home = () => {
+export default function Home() {
   return (
-    <div>Home</div>
-  )
+    <div>
+      <Header />
+    </div>
+  );
 }
-
-export default Home
