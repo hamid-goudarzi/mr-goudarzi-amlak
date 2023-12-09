@@ -1,13 +1,35 @@
 "use client";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { hydrateUser, selectUser } from "../../redux/slice/userSlice";
+import { useEffect } from "react";
+import axiosConfig from "../../utils/axiosConfig";
 
 const Header = () => {
+  const axiosInstance = axiosConfig();
   const { user } = useSelector(selectUser);
-  useEffect(() => {
-    dispatch(hydrateUser());
-  }, [dispatch]);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+     dispatch(hydrateUser());
+  },[]);
+
+  const logout = async () => {
+    dispatch(logout());
+  //  try {
+  //    const response = await axiosInstance.get("/auth/logout",{
+  //       headers: {
+  //         "auth-token": JSON.parse(localStorage.getItem("token")),
+  //       },
+  //    });
+  //    console.log(response.data);
+  //   if (response.data) {
+  
+  //    router.push("/login");
+  //   }
+  //  } catch (error) {
+  //    console.error("Error creating account:", error.message);
+  //  }
+  };
   return (
     <header>
       <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
@@ -30,14 +52,15 @@ const Header = () => {
                     Welcome {user.firstName}
                   </span>
 
-                  <a
+                  <button
+                    onClick={logout}
                     // href="/logout"
                     className="text-gray-800 dark:text-white
                      hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg
                       text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
                   >
                     Logout
-                  </a>
+                  </button>
                 </div>
               ) : (
                 <div>

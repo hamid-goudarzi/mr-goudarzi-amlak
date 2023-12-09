@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt")
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const TokenBlackList = require("../models/TokenBlackList");
 // const { userValidateSchema } = require("../utils/validation");
 const saltRoundd = 10;
 
@@ -29,8 +30,6 @@ const login = async (req, res) => {
         return res.status(500).send({ message: "Internal Sever Error" })
     }
 }
-
-
 
 const singnup = async (req, res) => {
     // firtName:String,
@@ -63,6 +62,14 @@ const singnup = async (req, res) => {
     }
 }
 
+const logout = async (req, res) => {
+    try {
+        const token = req.header("auth-token");
+        await TokenBlackList.create({ token });
+        return res.send({ message: "You logged out" });
+    } catch (error) {
+        return res.status(500).send({ message: "Internal Sever Error" });
+    }
+};
 
-
-module.exports = { login, singnup }
+module.exports = { login, singnup, logout }
