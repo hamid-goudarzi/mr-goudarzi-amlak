@@ -1,6 +1,6 @@
 "use client";
 import { useDispatch, useSelector } from "react-redux";
-import { hydrateUser, selectUser } from "../../redux/slice/userSlice";
+import { hydrateUser, logout, selectUser } from "../../redux/slice/userSlice";
 import { useEffect } from "react";
 import axiosConfig from "../../utils/axiosConfig";
 
@@ -13,22 +13,22 @@ const Header = () => {
      dispatch(hydrateUser());
   },[]);
 
-  const logout = async () => {
-    dispatch(logout());
-  //  try {
-  //    const response = await axiosInstance.get("/auth/logout",{
-  //       headers: {
-  //         "auth-token": JSON.parse(localStorage.getItem("token")),
-  //       },
-  //    });
-  //    console.log(response.data);
-  //   if (response.data) {
-  
-  //    router.push("/login");
-  //   }
-  //  } catch (error) {
-  //    console.error("Error creating account:", error.message);
-  //  }
+  const logoutBtn = async () => {
+   
+   try {
+     const response = await axiosInstance.get("/auth/logout",{
+        headers: {
+          "auth-token": JSON.parse(localStorage.getItem("token")),
+        },
+     });
+     console.log(response.data);
+    if (response.data) {
+      dispatch(logout());
+     router.push("/login");
+    }
+   } catch (error) {
+     console.error("Error creating account:", error.message);
+   }
   };
   return (
     <header>
@@ -53,7 +53,7 @@ const Header = () => {
                   </span>
 
                   <button
-                    onClick={logout}
+                    onClick={logoutBtn}
                     // href="/logout"
                     className="text-gray-800 dark:text-white
                      hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg
