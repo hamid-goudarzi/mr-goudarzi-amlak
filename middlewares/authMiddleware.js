@@ -6,13 +6,11 @@ const isLogged = async (req, res, next) => {
   // const token = req.headers.authorization.split(" ")[1];
   console.log(token);
   if (!token) {
-  
     return res.status(401).json({ error: "You are not logged in" });
   }
   const tokenBlackList = await TokenBlackList.findOne({ token });
 
   if (tokenBlackList) {
-   
     return res.status(401).json({ error: "Invalid Token" });
   }
 
@@ -26,6 +24,8 @@ const isLogged = async (req, res, next) => {
     return res.status(400).json({ error: "Invalid Token" });
   }
 };
+
+
 const isAdmin = async (req, res, next) => {
   const role = req.user.role;
   if (role !== "admin") {

@@ -1,11 +1,13 @@
 import React from "react";
 import CreateProperty from "../../components/CreateProperty";
+import AdminPanel from ".";
+import AdLayout from "../../components/admin-panel/Layout";
 
 function CreatePropertyPage() {
   return (
-    <div>
+    <AdLayout>
       <CreateProperty />
-    </div>
+    </AdLayout>
   );
 }
 

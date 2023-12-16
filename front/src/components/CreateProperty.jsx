@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import axiosConfig from "../utils/axiosConfig";
+import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/slice/userSlice";
 
 const CreateProperty = () => {
-    const axiosInstance = axiosConfig();
+  const { user } = useSelector(selectUser);
+  const axiosInstance = axiosConfig();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -25,20 +29,47 @@ const CreateProperty = () => {
     });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    /////// 1. Create  propertyController
-    /////// 2. Create  propertyRouter
     try {
-        const response = await axiosInstance.post(
-          "/property/create",
-          formData
-        );
+      const response = await axiosInstance.post(
+        "/property",
+        {
+          formData,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": JSON.parse(localStorage.getItem("token")),
+          },
+        }
+      );
+      console.log(response);
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Property created successfully",
+          showConfirmButton: true,
+          timer: 1500,
+        });
         router.push("/admin_panel");
-      } catch (error) {
-        console.error("Error creating account:", error.message);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
       }
+    } catch (error) {
+      console.error("Error creating account:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+      });
+    }
   };
 
   return (
