@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import axiosConfig from "../utils/axiosConfig";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
-import { selectUser } from "../redux/slice/userSlice";
+// import { selectUser } from "../redux/slice/userSlice";
 
 const CreateProperty = () => {
-  const { user } = useSelector(selectUser);
+  // const { user } = useSelector(selectUser);
   const axiosInstance = axiosConfig();
   const [formData, setFormData] = useState({
     title: "",

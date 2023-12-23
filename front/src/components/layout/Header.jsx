@@ -1,16 +1,20 @@
 "use client";
 import { useDispatch, useSelector } from "react-redux";
-import { hydrateUser, logout, selectUser } from "../../redux/slice/userSlice";
+import { hydrateUser,  logout, selectUser} from "../../redux/slice/userSlice";
 import { useEffect } from "react";
 import axiosConfig from "../../utils/axiosConfig";
+import { useRouter } from "next/router";
 
 const Header = () => {
   const axiosInstance = axiosConfig();
-  const { user } = useSelector(selectUser);
+  const user = useSelector(selectUser);
+  // console.log(user);
   const dispatch = useDispatch();
-
+  const router = useRouter();
   useEffect(() => {
      dispatch(hydrateUser());
+    //  dispatch(hydrateToken());
+     
   },[]);
 
   const logoutBtn = async () => {
@@ -18,7 +22,7 @@ const Header = () => {
    try {
      const response = await axiosInstance.get("/auth/logout",{
         headers: {
-          "auth-token": JSON.parse(localStorage.getItem("token")),
+          "auth-token": user.token,
         },
      });
      console.log(response.data);
@@ -46,10 +50,10 @@ const Header = () => {
           </a>
           <div className="flex items-center lg:order-2">
             <div>
-              {user ? (
+              {user.info ? (
                 <div>
                   <span className="text-gray-800 dark:text-white mr-2">
-                    Welcome {user.firstName}
+                    Welcome {user.info.firstName}
                   </span>
 
                   <button

@@ -31,7 +31,13 @@ const LoginForm = () => {
       );
       
       dispatch(login(response.data));
-      router.push("/home");
+      const role = response.data.user.role;
+      if (role === "ADMIN") {
+        router.push("/admin_panel");
+      } else {
+        router.push("/home");
+      }
+     
     } catch (error) {
       console.error("Error creating account:", error.message);
     }
