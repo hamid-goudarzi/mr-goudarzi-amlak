@@ -6,12 +6,12 @@ const isLogged = async (req, res, next) => {
   // const token = req.headers.authorization.split(" ")[1];
   console.log(token);
   if (!token) {
-    return res.status(401).json({ error: "You are not logged in" });
+    return res.status(401).json({ message: "You are not logged in" });
   }
   const tokenBlackList = await TokenBlackList.findOne({ token });
 
   if (tokenBlackList) {
-    return res.status(401).json({ error: "Invalid Token" });
+    return res.status(401).json({ message: "Invalid Token" });
   }
 
   try {
@@ -21,7 +21,7 @@ const isLogged = async (req, res, next) => {
     console.log(verified);
     next();
   } catch (error) {
-    return res.status(400).json({ error: "Invalid Token" });
+    return res.status(400).json({ message: "Invalid Token" });
   }
 };
 
@@ -29,7 +29,7 @@ const isLogged = async (req, res, next) => {
 const isAdmin = async (req, res, next) => {
   const role = req.user.role;
   if (role !== "ADMIN") {
-    return res.status(403).json({ error: "You are not admin" });
+    return res.status(403).json({ message: "You are not admin" });
   }
   next();
 };

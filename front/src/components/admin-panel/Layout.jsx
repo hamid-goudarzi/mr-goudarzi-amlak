@@ -12,16 +12,23 @@ const AdLayout = ({ children }) => {
 
   const dispatch = useDispatch();
   const router = useRouter();
-  useEffect(() => {
-    //! refresh page ---> empty state
-    if (!info || !token) {
-      router.push("/login");
-    } else if (!(info.role == "ADMIN")) {
-      router.push("/login");
-    }
 
-    dispatch(hydrateUser());
-  }, []);
+
+
+  useEffect(() => {
+    const storedInfo = localStorage.getItem("info");
+    const storedToken = localStorage.getItem("token");
+  
+    if (!storedInfo || !storedToken || JSON.parse(storedInfo).role !== "ADMIN") {
+      router.push("/login");
+    } else {
+      dispatch(hydrateUser());
+    }
+  }, [dispatch, router]);
+  
+ 
+
+
 
   const logoutBtn = async () => {
     try {

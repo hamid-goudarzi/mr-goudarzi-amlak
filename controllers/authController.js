@@ -20,7 +20,7 @@ const login = async (req, res) => {
           { expiresIn: "15d" }
         );
 
-        return res.send({
+        return res.status(200).send({
           message: "You logged",
           token,
           user: {
@@ -31,9 +31,9 @@ const login = async (req, res) => {
           },
         });
       }
-      return res.send({ message: "email or password is not correct!!!" });
+      return res.status(400).send({ message: "email or password is not correct!!!" });
     }
-    return res.send({ message: "email or password is not correct!!!" });
+    return res.status(400).send({ message: "email or password is not correct!!!" });
   } catch (error) {
     return res.status(500).send({ message: "Internal Sever Error" });
   }
@@ -50,7 +50,7 @@ const singnup = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({ error: "ایمیل قبلا استفاده شده است" });
+      return res.status(400).json({ message: "ایمیل قبلا استفاده شده است" });
     }
 
     const hashPassword = await bcrypt.hash(password, saltRoundd);
@@ -62,7 +62,7 @@ const singnup = async (req, res) => {
       password: hashPassword,
     });
     await newUser.save();
-    return res.send({ message: "User created" });
+    return res.status(201).send({ message: "User created" });
   } catch (error) {
     console.log(error.message);
     return res.status(500).send({ message: "Internal Sever Error" });
@@ -73,7 +73,7 @@ const logout = async (req, res) => {
   try {
     const token = req.header("auth-token");
     await TokenBlackList.create({ token });
-    return res.send({ message: "You logged out" });
+    return res.status(200).send({ message: "You logged out" });
   } catch (error) {
     return res.status(500).send({ message: "Internal Sever Error" });
   }

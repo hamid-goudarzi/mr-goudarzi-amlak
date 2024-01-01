@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";  
 import { useRouter } from "next/router";
 import { login } from "../redux/slice/userSlice";
 import axiosConfig from "../utils/axiosConfig";
+
+import { ToastContainer, toast } from 'react-toastify';
+
+
+
 
 const LoginForm = () => {
   const axiosInstance = axiosConfig();
@@ -11,6 +17,13 @@ const LoginForm = () => {
     password: "",
   });
   const dispatch = useDispatch(); 
+
+  /// toast Error
+  useEffect(() => {
+    // Initialize ToastContainer after the component has been mounted (client-side)
+    toast.success("Welcome!");
+  }, []);
+
 
   const router = useRouter();
   const handleChange = (e) => {
@@ -29,22 +42,29 @@ const LoginForm = () => {
         "/auth/login",
         formData
       );
-      
-      dispatch(login(response.data));
-      const role = response.data.user.role;
-      if (role === "ADMIN") {
-        router.push("/admin_panel");
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        dispatch(login(response.data));
+        const role = response.data.user.role;
+        if (role === "ADMIN") {
+          router.push("/admin_panel");
+        } else {
+          router.push("/home");
+        }
       } else {
-        router.push("/home");
+        
+        toast.error(response.data.message);
       }
      
     } catch (error) {
+      toast.error(error.message);
       console.error("Error creating account:", error.message);
     }
   };
 
   return (
-    <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+    <>
+      <form className="space-y-4 md:space-y-6 w-1/3 mx-auto  p-5" onSubmit={handleSubmit}>
       
       <div>
         <label
@@ -90,6 +110,8 @@ const LoginForm = () => {
         Login
       </button>
     </form>
+    <ToastContainer />
+    </>
   );
 };
 
