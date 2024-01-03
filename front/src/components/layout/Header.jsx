@@ -1,38 +1,38 @@
 "use client";
 import { useDispatch, useSelector } from "react-redux";
-import { hydrateUser,  logout, selectUser} from "../../redux/slice/userSlice";
+import { hydrateUser, logout, selectUser } from "../../redux/slice/userSlice";
 import { useEffect } from "react";
 import axiosConfig from "../../utils/axiosConfig";
 import { useRouter } from "next/router";
-
+import { ToastContainer, toast } from "react-toastify";
 const Header = () => {
   const axiosInstance = axiosConfig();
   const user = useSelector(selectUser);
-  // console.log(user);
   const dispatch = useDispatch();
   const router = useRouter();
   useEffect(() => {
-     dispatch(hydrateUser());
-    //  dispatch(hydrateToken());
-     
-  },[]);
+    dispatch(hydrateUser());
+  }, []);
 
   const logoutBtn = async () => {
-   
-   try {
-     const response = await axiosInstance.get("/auth/logout",{
+    try {
+      const response = await axiosInstance.get("/auth/logout", {
         headers: {
           "auth-token": user.token,
         },
-     });
-     console.log(response.data);
-    if (response.data) {
-      dispatch(logout());
-     router.push("/login");
+      });
+      console.log(response.data);
+      if (response.data) {
+        toast.success(response.data.message);
+        setTimeout(() => {
+          dispatch(logout());
+          router.push("/");
+        }, 1000);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.error("Error creating account:", error.message);
     }
-   } catch (error) {
-     console.error("Error creating account:", error.message);
-   }
   };
   return (
     <header>
@@ -176,6 +176,7 @@ const Header = () => {
           </div>
         </div>
       </nav>
+      <ToastContainer />
     </header>
   );
 };

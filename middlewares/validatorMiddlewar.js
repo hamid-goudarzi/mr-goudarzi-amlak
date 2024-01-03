@@ -4,7 +4,8 @@ const validateMiddelware = (schema) => {
 
     if (error) {
       const messageError = error.details.map((detail) => detail.message);
-      return res.status(400).json({ error: messageError });
+      console.log(messageError);
+      return res.status(400).send({ message: messageError });
     }
 
     req.validatedData = value;

@@ -1,14 +1,15 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { hydrateUser, logout, selectUser } from "../../redux/slice/userSlice";
 import axiosConfig from "../../utils/axiosConfig";
 import { useRouter } from "next/router";
+import { ToastContainer, toast } from 'react-toastify';
 
 const AdLayout = ({ children }) => {
   const axiosInstance = axiosConfig();
   const { info, token } = useSelector(selectUser);
-  console.log(info, token);
+   const [isLogged, setIsLogged] = useState(false);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -23,13 +24,11 @@ const AdLayout = ({ children }) => {
       router.push("/login");
     } else {
       dispatch(hydrateUser());
+      setIsLogged(true);
     }
   }, [dispatch, router]);
   
  
-
-
-
   const logoutBtn = async () => {
     try {
       const response = await axiosInstance.get("/auth/logout", {
@@ -37,17 +36,23 @@ const AdLayout = ({ children }) => {
           "auth-token": token,
         },
       });
-      console.log(response.data);
+     
       if (response.data) {
-        dispatch(logout());
-        router.push("/login");
+        toast.success(response.data.message);
+        setTimeout(() => {
+          dispatch(logout());
+          router.push("/login");
+        }, 1000);
       }
     } catch (error) {
+      toast.error(error.message);
       console.error("Error creating account:", error.message);
     }
   };
   return (
-    <div>
+    <>
+      {isLogged && (
+      <div>
       <nav className="bg-white border-b border-gray-200 fixed z-30 w-full">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
@@ -587,7 +592,10 @@ const AdLayout = ({ children }) => {
       </div>
       {/* <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="https://demo.themesberg.com/windster/app.bundle.js"></script> */}
-    </div>
+    <ToastContainer/>
+    </div>)
+    }
+    </>
   );
 };
 

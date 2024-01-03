@@ -31,6 +31,7 @@ const login = async (req, res) => {
           },
         });
       }
+      console.log("email or password is not correct!!!");
       return res.status(400).send({ message: "email or password is not correct!!!" });
     }
     return res.status(400).send({ message: "email or password is not correct!!!" });
