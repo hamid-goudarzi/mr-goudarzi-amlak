@@ -3,9 +3,11 @@ import axiosConfig from "../utils/axiosConfig";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 // import { selectUser } from "../redux/slice/userSlice";
+import { useRouter } from "next/router";
 
 const CreateProperty = () => {
   // const { user } = useSelector(selectUser);
+  const router = useRouter();
   const axiosInstance = axiosConfig();
   const [formData, setFormData] = useState({
     title: "",
@@ -15,11 +17,9 @@ const CreateProperty = () => {
     image: "",
     street: "",
     city: "",
-    state: "",
+    province: "",
     postalCode: "",
     country: "",
-    latitude: "",
-    longitude: "",
   });
 
   const handleChange = (e) => {
@@ -29,12 +29,31 @@ const CreateProperty = () => {
     });
   };
 
+  const uploadImageProperty = async (e) => {
+  
+    const file = formData.image;
+    const formDataUpload = new FormData();
+    formDataUpload.append("file", file);
+
+    const res = await axiosInstance.post(
+      "/api/properties/upload",
+      formDataUpload,
+      {
+          headers: {
+              "Content-Type": "multipart/form-data",
+              "auth-token": JSON.parse(localStorage.getItem("token")),
+          },
+      }
+  );
+    const data = res.data;
+    console.log(data);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await axiosInstance.post(
-        "/property",
+        "/api/properties",
         {
           formData,
         },
@@ -47,14 +66,14 @@ const CreateProperty = () => {
       );
       console.log(response);
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         Swal.fire({
           icon: "success",
           title: "Property created successfully",
           showConfirmButton: true,
           timer: 1500,
         });
-        router.push("/admin_panel");
+        router.push("/admin_panel/allProperties");
       } else {
         Swal.fire({
           icon: "error",
@@ -77,9 +96,8 @@ const CreateProperty = () => {
       <div className="mx-auto w-full max-w-[550px] bg-white">
         <form
           className="py-6 px-9"
-          //   action="https://formbold.com/s/FORM_ID"
-          //   method="POST"
           onSubmit={handleSubmit}
+          encType="multipart/form-data"
         >
           <div className="mb-4">
             <label htmlFor="title" className="block text-gray-600">
@@ -96,23 +114,48 @@ const CreateProperty = () => {
             />
           </div>
 
-          {/* Add similar blocks for other fields (description, startDate, endDate, etc.) */}
-
           <div className="mb-4">
-            <label htmlFor="image" className="block text-gray-600">
-              Image URL
+            <label htmlFor="country" className="block text-black">
+              Country
             </label>
             <input
               type="text"
-              id="image"
-              name="image"
-              value={formData.image}
+              id="country"
+              name="country"
+              value={formData.country}
               onChange={handleChange}
               className="w-full border p-2 rounded-md"
               required
             />
           </div>
-
+          <div className="mb-4">
+            <label htmlFor="province" className="block text-black">
+              Province
+            </label>
+            <input
+              type="text"
+              id="province"
+              name="province"
+              value={formData.province}
+              onChange={handleChange}
+              className="w-full border p-2 rounded-md"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="city" className="block text-gray-600">
+              City
+            </label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              className="w-full border p-2 rounded-md"
+              required
+            />
+          </div>
           <div className="mb-4">
             <label htmlFor="street" className="block text-gray-600">
               Street
@@ -127,53 +170,39 @@ const CreateProperty = () => {
               required
             />
           </div>
+          <div className="mb-4">
+            <label htmlFor="postalCode" className="block text-gray-600">
+              Postal Code
+            </label>
+            <input
+              type="text"
+              id="postalCode"
+              name="postalCode"
+              value={formData.postalCode}
+              onChange={handleChange}
+              className="w-full border p-2 rounded-md"
+              required
+            />
+          </div>
 
           {/* Add similar blocks for other address fields (city, state, postalCode, country) */}
 
-          <div className="mb-4">
-            <label htmlFor="latitude" className="block text-gray-600">
-              Latitude
-            </label>
-            <input
-              type="text"
-              id="latitude"
-              name="latitude"
-              value={formData.latitude}
-              onChange={handleChange}
-              className="w-full border p-2 rounded-md"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="longitude" className="block text-gray-600">
-              Longitude
-            </label>
-            <input
-              type="text"
-              id="longitude"
-              name="longitude"
-              value={formData.longitude}
-              onChange={handleChange}
-              className="w-full border p-2 rounded-md"
-              required
-            />
-          </div>
-
           <div className="mb-5">
             <label
-              for="email"
+              htmlFor="description"
               className="mb-3 block text-base font-medium text-[#07074D]"
             >
-              Send files to this email:
+              Description
             </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="example@domain.com"
-              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-            />
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows="5"
+              className="w-full border p-2 rounded-md"
+              required
+            ></textarea>
           </div>
 
           <div className="mb-6 pt-4">
@@ -182,23 +211,22 @@ const CreateProperty = () => {
             </label>
 
             <div className="mb-8">
-              <input type="file" name="file" id="file" className="sr-only" />
-              <label
-                for="file"
-                className="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
+              <input
+                type="file"
+                name="image"
+                id="image"
+                value={formData.image}
+                onChange={handleChange}
+              />
+
+              <button
+                type="button"
+                onClick={uploadImageProperty}
+                className="inline-flex rounded border border-[#e0e0e0] py-2 px-7 
+              text-base font-medium text-[#07074D]"
               >
-                <div>
-                  <span className="mb-2 block text-xl font-semibold text-[#07074D]">
-                    Drop files here
-                  </span>
-                  <span className="mb-2 block text-base font-medium text-[#6B7280]">
-                    Or
-                  </span>
-                  <span className="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]">
-                    Browse
-                  </span>
-                </div>
-              </label>
+                Upload
+              </button>
             </div>
 
             <div className="mb-5 rounded-md bg-[#F5F7FB] py-4 px-8">
@@ -267,7 +295,7 @@ const CreateProperty = () => {
 
           <div>
             <button className="hover:shadow-form w-full rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-              Send File
+              Create Property
             </button>
           </div>
         </form>

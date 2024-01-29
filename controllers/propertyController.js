@@ -1,19 +1,41 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Property = require('../models/Property'); // Assuming your model file is in the 'models' directory
+const Property = require("../models/Property"); // Assuming your model file is in the 'models' directory
 
-const getAllProperties =async (req, res) => {
-    try {
-         const allProperties = await Property.find();
-    
-        res.status(200).json(allProperties);
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-      }
-}
+
+
+const uploadImage = async (req, res) => {
+  try {
+    console.log(req.file);
+    const { file } = req;
+   
+
+    if (!file) {
+      return res.status(400).json({ error: "No file uploaded." });
+    }
+    res.status(200).json({ message: "File uploaded successfully", file });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+const getAllProperties = async (req, res) => {
+  try {
+    const allProperties = await Property.find();
+
+    res.status(200).json(allProperties);
+    console.log(allProperties);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 // Create a new property
-const createProperty =async (req, res) => {
+const createProperty = async (req, res) => {
   try {
     // Assuming you're sending the property data in the request body
     const {
@@ -22,11 +44,14 @@ const createProperty =async (req, res) => {
       startDate,
       endDate,
       image,
-      address,
-      location,
-    } = req.body;
+      street,
+      city,
+      province,
+      postalCode,
+      country,
+    } = req.body.formData;
 
-    console.log(req.body);
+    console.log(street, city);
     // Create a new Property instance
     const newProperty = new Property({
       title,
@@ -34,8 +59,13 @@ const createProperty =async (req, res) => {
       startDate,
       endDate,
       image,
-      address,
-      location,
+      address: {
+        street,
+        city,
+        province,
+        postalCode,
+        country,
+      },
     });
 
     // Save the property to the database
@@ -44,8 +74,8 @@ const createProperty =async (req, res) => {
     res.status(201).json(savedProperty);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-module.exports = {createProperty, getAllProperties};
+module.exports = { createProperty, getAllProperties,uploadImage };

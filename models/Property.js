@@ -32,7 +32,7 @@ const Property = new mongoose.Schema({
       type: String,
       required: true,
     },
-    state: {
+    province: {
       type: String,
     //   required: true,
     },
