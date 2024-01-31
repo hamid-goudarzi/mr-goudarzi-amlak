@@ -4,9 +4,12 @@ const app =express()
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 var cors = require('cors')
+const path = require("path");
 
 //  todo
 app.use(cors())
+// تنظیم دایرکتوری برای تصاویر استاتیک
+app.use("/public/uploads/properties", express.static(path.join(__dirname, "public/uploads/properties")));
  
 
 

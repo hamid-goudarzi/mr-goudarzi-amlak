@@ -23,6 +23,10 @@ const Property = new mongoose.Schema({
     type: String, // You can use String to store the URL of the image
     // required: true,
   },
+  imageUrl: {
+    type: String,
+    // required: true,
+  },
   address: {
     street: {
       type: String,
