@@ -16,6 +16,8 @@ const CreateProperty = () => {
     startDate: "",
     endDate: "",
     image: "",
+    imageUrl: "",
+    imageFileName:"",
     street: "",
     city: "",
     province: "",
@@ -61,9 +63,8 @@ const CreateProperty = () => {
       }
     );
     const data = await res.data;
-    setFormData({ ...formData, imageUrl: data.file.imageUrl});
-    // setFormData({ ...formData, imageUrl: data.file.imageUrl, image: data.file.filename});
-    console.log(data);
+    setFormData({ ...formData, imageUrl: data.file.imageUrl, imageFileName: data.file.filename});
+   
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,7 +73,7 @@ const CreateProperty = () => {
       const response = await axiosInstance.post(
         "/api/properties",
         {
-          formData,
+          ...formData, image: formData.imageFileName
         },
         {
           headers: {

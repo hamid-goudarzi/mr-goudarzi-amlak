@@ -33,6 +33,7 @@ const getAllProperties = async (req, res) => {
 // Create a new property
 const createProperty = async (req, res) => {
   try {
+
     // Assuming you're sending the property data in the request body
     const {
       title,
@@ -46,9 +47,8 @@ const createProperty = async (req, res) => {
       province,
       postalCode,
       country,
-    } = req.body.formData;
+    } = req.body;
 
-    console.log(street, city);
     // Create a new Property instance
     const newProperty = new Property({
       title,

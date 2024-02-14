@@ -19,7 +19,7 @@ const isLogged = async (req, res, next) => {
     req.user = verified;
     next();
   } catch (error) {
-    return res.status(400).json({ message: "Invalid Token" });
+    return res.status(400).json({ message: "Expired Token" });
   }
 };
 

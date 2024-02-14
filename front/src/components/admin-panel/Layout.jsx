@@ -46,6 +46,10 @@ const AdLayout = ({ children }) => {
       }
     } catch (error) {
       toast.error(error.message);
+      setTimeout(() => {
+        dispatch(logout());
+        router.push("/login");
+      }, 1000);
       console.error("Error creating account:", error.message);
     }
   };

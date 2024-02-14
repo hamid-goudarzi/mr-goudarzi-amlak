@@ -31,6 +31,10 @@ const Header = () => {
       }
     } catch (error) {
       toast.error(error.response.data.message);
+      setTimeout(() => {
+        dispatch(logout());
+        router.push("/login");
+      }, 1000);
       console.error("Error creating account:", error.message);
     }
   };

@@ -1,0 +1,2 @@
+::ffff:127.0.0.1 - - [14/Feb/2024:18:32:26 +0000] "POST /auth/login HTTP/1.1" 200 332 "-" "PostmanRuntime/7.36.1"
+::ffff:127.0.0.1 - - [14/Feb/2024:18:32:46 +0000] "POST /auth/signup HTTP/1.1" 400 62 "-" "PostmanRuntime/7.36.1"

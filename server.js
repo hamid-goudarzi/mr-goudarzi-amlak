@@ -5,6 +5,10 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 var cors = require('cors')
 const path = require("path");
+const logger = require("./middlewares/loggerMiddleware");
+const morgan = require('morgan')
+const fs = require('fs')
+
 
 //  todo
 app.use(cors())
@@ -21,8 +25,13 @@ app.use(bodyParser.urlencoded({ extended: false }))
 mongoose.connect('mongodb://127.0.0.1:27017/amlak_db')
   .then(() => console.log('DB Connected!'));
 
-  
+  // create a write stream (in append mode)
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),
+ { flags: 'a' })
+// app.use(logger);
+app.use( morgan("combined", { stream: accessLogStream }))
 app.use(indexRouter);
+
 
 
 
