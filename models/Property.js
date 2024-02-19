@@ -2,21 +2,14 @@
 const mongoose = require('mongoose');
 
 // Define the Impartment schema
-const Property = new mongoose.Schema({
+const PropertySchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
   },
+  
   description: {
     type: String,
-    // required: true,
-  },
-  startDate: {
-    type: Date,
-    // required: true,
-  },
-  endDate: {
-    type: Date,
     // required: true,
   },
   image: {
@@ -59,9 +52,25 @@ const Property = new mongoose.Schema({
     //   required: true,
     },
   },
+  area: {
+    type: Number,
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ['rental', 'selling'],
+    required: true,
+  },
 }, { timestamps: true });
 
+PropertySchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
 
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+} )
 
 // Export the Impartment model
-module.exports = mongoose.model('Property', Property);
+module.exports = mongoose.model('Property', PropertySchema);

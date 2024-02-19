@@ -1,22 +1,6 @@
-const express = require("express");
-const router = express.Router();
 const Property = require("../models/Property"); // Assuming your model file is in the 'models' directory
-
-const uploadImage = async (req, res) => {
-  try {
-    const { file } = req;
-    if (!file) {
-      return res.status(400).json({ error: "No file uploaded." });
-    }
-    // تعریف آدرس URL مربوط به تصویر
-    const imageUrl = `${process.env.HOST_URL}/public/uploads/properties/${file.filename}`;
-     file.imageUrl = imageUrl;
-    res.status(200).json({ message: "File uploaded successfully", file });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
+const RentalProperty = require("../models/RentalProperty");
+const SellingProperty = require("../models/SellingProperty");
 
 const getAllProperties = async (req, res) => {
   try {
@@ -38,8 +22,6 @@ const createProperty = async (req, res) => {
     const {
       title,
       description,
-      startDate,
-      endDate,
       image,
       imageUrl,
       street,
@@ -47,24 +29,55 @@ const createProperty = async (req, res) => {
       province,
       postalCode,
       country,
-    } = req.body;
-
-    // Create a new Property instance
-    const newProperty = new Property({
-      title,
-      description,
+      area,
+      type,
       startDate,
       endDate,
-      image,
-      imageUrl,
-      address: {
-        street,
-        city,
-        province,
-        postalCode,
-        country,
-      },
-    });
+      rent,
+      price,
+      
+    } = req.body;
+
+    let newProperty;
+    if (type === 'rental') {
+       newProperty = new RentalProperty({
+        title,
+        description,
+        image,
+        imageUrl,
+        address: {
+          street,
+          city,
+          province,
+          postalCode,
+          country,
+        },
+        type,
+        area,
+        startDate,
+        endDate,
+        rent,
+      });
+    }
+    
+    if (type === 'selling') {
+      newProperty = new SellingProperty({
+       title,
+       description,
+       image,
+       imageUrl,
+       address: {
+         street,
+         city,
+         province,
+         postalCode,
+         country,
+       },
+       type,
+       area,
+       price,
+     });
+   }
 
     // Save the property to the database
     const savedProperty = await newProperty.save();
@@ -76,4 +89,4 @@ const createProperty = async (req, res) => {
   }
 };
 
-module.exports = { createProperty, getAllProperties, uploadImage };
+module.exports = { createProperty, getAllProperties };
