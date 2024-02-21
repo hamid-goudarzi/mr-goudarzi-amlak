@@ -1,23 +1,16 @@
 import React, { useState } from "react";
-import axiosConfig from "../utils/axiosConfig";
-import Swal from "sweetalert2";
+import axiosConfig from "../../utils/axiosConfig";
+
 import { useSelector } from "react-redux";
 // import { selectUser } from "../redux/slice/userSlice";
 import { useRouter } from "next/router";
 
-const CreateProperty = () => {
-  const [progress, setProgress] = useState(0);
-  const [file, setFile] = useState(null);
-  const router = useRouter();
-  const axiosInstance = axiosConfig();
-  const [formData, setFormData] = useState({
+const Step2 = ({ setStepStatus, dataFromStep }) => {
+  const [dataOfStep2, setDataOfStep2] = useState({
     title: "",
     description: "",
     startDate: "",
     endDate: "",
-    image: "",
-    imageUrl: "",
-    imageFileName:"",
     street: "",
     city: "",
     province: "",
@@ -26,87 +19,14 @@ const CreateProperty = () => {
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setDataOfStep2({
+      ...dataOfStep2,
       [e.target.name]: e.target.value,
     });
-    if(e.target.type === "file"){
-      setFile(e.target.files[0]);
-    } 
   };
-  const uploadImageProperty = async (e) => {
-    // const file = formData.image;
-    // bayad ba dom file ro begirirm bala eshtebahan adrese file ro gereftim ebteda
-    // const fileInput = e.target.previousSibling;
-    // const file = fileInput.files[0];
-
-    if (!file) {
-      console.error("No file selected");
-      return;
-    }
-    const formDataUpload = new FormData();
-    formDataUpload.append("image", file);
-
-    const res = await axiosInstance.post(
-      "/api/properties/upload",
-      formDataUpload,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "auth-token": JSON.parse(localStorage.getItem("token")),
-        },
-        onUploadProgress: (progressEvent) => {
-          const { loaded, total } = progressEvent;
-          const progressPercentage = Math.round((loaded / total) * 100);
-          setProgress(progressPercentage);
-        },
-      }
-    );
-    const data = await res.data;
-    setFormData({ ...formData, imageUrl: data.file.imageUrl, imageFileName: data.file.filename});
-   
-  };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axiosInstance.post(
-        "/api/properties",
-        {
-          ...formData, image: formData.imageFileName
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": JSON.parse(localStorage.getItem("token")),
-          },
-        }
-      );
-      console.log(response);
-
-      if (response.status === 201) {
-        Swal.fire({
-          icon: "success",
-          title: "Property created successfully",
-          showConfirmButton: true,
-          timer: 1500,
-        });
-        router.push("/admin_panel/allProperties");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong!",
-        });
-      }
-    } catch (error) {
-      console.error("Error creating account:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Something went wrong!",
-      });
-    }
+  const handleSubmit = () => {
+    dataFromStep(dataOfStep2);
+    setStepStatus(3);
   };
 
   return (
@@ -125,7 +45,7 @@ const CreateProperty = () => {
               type="text"
               id="title"
               name="title"
-              value={formData.title}
+              value={dataOfStep2.title}
               onChange={handleChange}
               className="w-full border p-2 rounded-md"
               required
@@ -140,7 +60,7 @@ const CreateProperty = () => {
               type="text"
               id="country"
               name="country"
-              value={formData.country}
+              value={dataOfStep2.country}
               onChange={handleChange}
               className="w-full border p-2 rounded-md"
               required
@@ -154,7 +74,7 @@ const CreateProperty = () => {
               type="text"
               id="province"
               name="province"
-              value={formData.province}
+              value={dataOfStep2.province}
               onChange={handleChange}
               className="w-full border p-2 rounded-md"
               required
@@ -168,7 +88,7 @@ const CreateProperty = () => {
               type="text"
               id="city"
               name="city"
-              value={formData.city}
+              value={dataOfStep2.city}
               onChange={handleChange}
               className="w-full border p-2 rounded-md"
               required
@@ -182,7 +102,7 @@ const CreateProperty = () => {
               type="text"
               id="street"
               name="street"
-              value={formData.street}
+              value={dataOfStep2.street}
               onChange={handleChange}
               className="w-full border p-2 rounded-md"
               required
@@ -196,7 +116,7 @@ const CreateProperty = () => {
               type="text"
               id="postalCode"
               name="postalCode"
-              value={formData.postalCode}
+              value={dataOfStep2.postalCode}
               onChange={handleChange}
               className="w-full border p-2 rounded-md"
               required
@@ -215,7 +135,7 @@ const CreateProperty = () => {
             <textarea
               id="description"
               name="description"
-              value={formData.description}
+              value={dataOfStep2.description}
               onChange={handleChange}
               rows="5"
               className="w-full border p-2 rounded-md"
@@ -228,29 +148,10 @@ const CreateProperty = () => {
               Upload File
             </label>
 
-            <div className="mb-8">
-              <input
-                type="file"
-                name="image"
-                id="image"
-                value={formData.image}
-                onChange={handleChange}
-              />
-
-              <button
-                type="button"
-                onClick={uploadImageProperty}
-                className="inline-flex rounded border border-[#e0e0e0] py-2 px-7 
-              text-base font-medium text-[#07074D]"
-              >
-                Upload
-              </button>
-            </div>
-
             <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
               <div className="flex items-center justify-between">
                 <span className="truncate pr-3 text-base font-medium text-[#07074D]">
-                {file ? file.name : ""}
+                  {file ? file.name : ""}
                 </span>
                 <button className="text-[#07074D]">
                   <svg
@@ -275,17 +176,12 @@ const CreateProperty = () => {
                   </svg>
                 </button>
               </div>
-              <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
-                <div className={`absolute left-0 right-0 h-full ${ progress? `w-[${progress}%]` : "w-0"} rounded-lg bg-[#6A64F1]`}></div>
-              </div>
-             
             </div>
-            
           </div>
 
           <div>
             <button className="hover:shadow-form w-full rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-              Create Property
+              Next
             </button>
           </div>
         </form>
@@ -294,4 +190,4 @@ const CreateProperty = () => {
   );
 };
 
-export default CreateProperty;
+export default Step2;
