@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import axiosConfig from "../../utils/axiosConfig";
+// import axiosConfig from "../../utils/axiosConfig";
 
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 // import { selectUser } from "../redux/slice/userSlice";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 
 const Step2 = ({ setStepStatus, dataFromStep }) => {
   const [dataOfStep2, setDataOfStep2] = useState({
