@@ -9,14 +9,11 @@ const logger = require("./middlewares/loggerMiddleware");
 const morgan = require('morgan')
 const fs = require('fs')
 
-
 //  todo
 app.use(cors())
 // تنظیم دایرکتوری برای تصاویر استاتیک
 app.use("/public/uploads/properties", express.static(path.join(__dirname, "public/uploads/properties")));
  
-
-
 
 require('dotenv').config()
 app.use(bodyParser.json())
