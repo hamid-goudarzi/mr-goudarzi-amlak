@@ -20,9 +20,7 @@ const RentalPropertySchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-
 const RentalProperty = Property.discriminator('RentalProperty', RentalPropertySchema);
-
 
 // Export the Impartment model
 module.exports = RentalProperty;
