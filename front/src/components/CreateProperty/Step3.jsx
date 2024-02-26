@@ -1,10 +1,12 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 
 const Step3 = ({ propertyType, setStepStatus, dataFromStep }) => {
   const [dataFromStep3, setDataFromStep3] = useState({
     startDate: "",
     endDate: "",
     price: "",
+    rent: "",
   });
   const handleChange = (e) => {
     setDataFromStep3({
@@ -34,6 +36,7 @@ const Step3 = ({ propertyType, setStepStatus, dataFromStep }) => {
                 name="startDate"
                 className="border-2 border-gray-300 p-2 rounded-md"
                 required
+                value={dataFromStep3.startDate}
                 onChange={handleChange}
               />
             </div>
@@ -45,6 +48,21 @@ const Step3 = ({ propertyType, setStepStatus, dataFromStep }) => {
                 type="date"
                 id="endDate"
                 name="endDate"
+                className="border-2 border-gray-300 p-2 rounded-md"
+                required
+                value={dataFromStep3.endDate}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="rent" className="text-gray-600">
+                Rent
+              </label>
+              <input
+                type="number"
+                id="rent"
+                name="rent"
+                value={dataFromStep3.rent}
                 className="border-2 border-gray-300 p-2 rounded-md"
                 required
                 onChange={handleChange}
@@ -65,15 +83,16 @@ const Step3 = ({ propertyType, setStepStatus, dataFromStep }) => {
           <h1>Step 3</h1>
           <div className="flex flex-col mb-4">
             <div>
-              <label htmlFor="Price" className="text-gray-600">
+              <label htmlFor="price" className="text-gray-600">
                 Price
               </label>
               <input
                 type="number"
-                id="Price"
-                name="Price"
+                id="price"
+                name="price"
                 className="border-2 border-gray-300 p-2 rounded-md"
                 required
+                value={dataFromStep3.price}
                 onChange={handleChange}
               />
             </div>

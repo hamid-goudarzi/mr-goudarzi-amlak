@@ -72,7 +72,8 @@ const singnup = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    const token = req.header("auth-token");
+    const tokenWithBearer = req.headers.authorization;
+     const token = tokenWithBearer.slice(7)
     await TokenBlackList.create({ token });
     return res.status(200).send({ message: "You logged out" });
   } catch (error) {

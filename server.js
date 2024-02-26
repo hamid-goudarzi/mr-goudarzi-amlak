@@ -32,7 +32,7 @@ app.use(indexRouter);
 
 
 
-const port=5000
+const port=process.env.PORT;
 
 app.listen(port,()=>{
     console.log(`server is runnig on port: ${port}`);

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdLayout from "../../components/admin-panel/Layout";
 import Step1 from "../../components/CreateProperty/Step1";
 import Step2 from "../../components/CreateProperty/Step2";
@@ -14,6 +14,7 @@ function CreatePropertyPage() {
   const [propertyType, setPropertyType] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
+    area: "",
     description: "",
     startDate: "",
     endDate: "",
@@ -26,6 +27,8 @@ function CreatePropertyPage() {
     postalCode: "",
     country: "",
     type: "",
+    price: "",
+    rent:"",
   });
   const handleNextStep = () => {
     setStepStatus((prevStep) => prevStep + 1);
@@ -36,20 +39,19 @@ function CreatePropertyPage() {
   };
   const router = useRouter();
   const axiosInstance = axiosConfig();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
+  const createProperty = async () => {
     try {
       const response = await axiosInstance.post(
         "/api/properties",
         {
-          ...dataOfStep2,
-          image: dataOfStep2.imageFileName,
+          ...formData,
+          image: formData.imageFileName,
         },
         {
           headers: {
             "Content-Type": "application/json",
-            "auth-token": JSON.parse(localStorage.getItem("token")),
+            "authorization": "Bearer "+ JSON.parse(localStorage.getItem("token")),
           },
         }
       );
@@ -79,6 +81,12 @@ function CreatePropertyPage() {
       });
     }
   };
+  useEffect(() => {
+    if (stepStatus === 5) {
+      createProperty();
+    }
+  }, [stepStatus]);
+
   return (
     <AdLayout>
       {stepStatus === 1 && (
@@ -97,7 +105,7 @@ function CreatePropertyPage() {
       )}
       {stepStatus === 3 && (
         <Step3
-          propertyType={propertyType}
+          propertyType={formData.type}
           setStepStatus={setStepStatus}
           dataFromStep={dataFromStep}
         />

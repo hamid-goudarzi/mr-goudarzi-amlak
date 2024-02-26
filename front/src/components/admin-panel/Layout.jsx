@@ -33,7 +33,7 @@ const AdLayout = ({ children }) => {
     try {
       const response = await axiosInstance.get("/auth/logout", {
         headers: {
-          "auth-token": token,
+          "authorization": "Bearer " + token,
         },
       });
      

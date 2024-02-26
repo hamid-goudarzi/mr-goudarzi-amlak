@@ -39,7 +39,7 @@ const createProperty = async (req, res) => {
     } = req.body;
 
     let newProperty;
-    if (type === 'rental') {
+    if (type === 'Rental') {
        newProperty = new RentalProperty({
         title,
         description,
@@ -60,7 +60,7 @@ const createProperty = async (req, res) => {
       });
     }
     
-    if (type === 'selling') {
+    if (type === 'Selling') {
       newProperty = new SellingProperty({
        title,
        description,

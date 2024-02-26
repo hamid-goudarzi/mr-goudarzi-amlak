@@ -2,8 +2,11 @@ const jwt = require("jsonwebtoken");
 const TokenBlackList = require("../models/TokenBlackList");
 
 const isLogged = async (req, res, next) => {
-  const token = req.header("auth-token");
+  const tokenWithBearer = req.headers.authorization;
  
+ 
+  const token = tokenWithBearer.slice(7)
+
   if (!token) {
     return res.status(401).json({ message: "You are not logged in" });
   }
@@ -14,6 +17,7 @@ const isLogged = async (req, res, next) => {
   }
 
   try {
+ 
     const verified = jwt.verify(token, process.env.SECRET_KEY);
 
     req.user = verified;

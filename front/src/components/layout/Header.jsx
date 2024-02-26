@@ -18,7 +18,7 @@ const Header = () => {
     try {
       const response = await axiosInstance.get("/auth/logout", {
         headers: {
-          "auth-token": user.token,
+          "authorization": "Bearer " + user.token,
         },
       });
       console.log(response.data);
