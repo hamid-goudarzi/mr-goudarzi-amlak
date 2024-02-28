@@ -81,4 +81,54 @@ const logout = async (req, res) => {
   }
 };
 
+///////////////// changepass
+// const changePassword = async (req, res) => {
+//   try {
+//     const { email, oldPassword, newPassword } = req.body;
+
+//     const user = await User
+//       .findOne({ email });
+
+//     if (user) {
+//       const verifyPass = await bcrypt.compare(oldPassword, user.password);
+//       if (verifyPass) {
+//         const hashPassword = await bcrypt.hash(newPassword, saltRoundd);
+//         user.password = hashPassword;
+//         await user.save();
+//         return res.status(200).send({ message: "Password changed" });
+//       }
+//       return res.status(400).send({ message: "old password is not correct!!!" });
+//     } else {
+//       return res.status(400).send({ message: "email is not correct!!!" });
+//     } 
+//   } 
+//   catch (error) {
+//     return res.status(500).send({ message: "Internal Sever Error" });
+//   }
+// }
+
+//forgot password
+// const forgotPassword = async (req, res) => { 
+//   try {
+
+//     const { email } = req.body;
+//     const user  = await User
+//       .findOne({ email });  
+//     if (user) {
+//       const token = jwt.sign(
+//         { userId: user._id, role: user.role },
+//         process.env.SECRET_KEY,
+//         { expiresIn: "15m" }
+//       );
+//       return res.status(200).send({ message: "token sent to your email", token });
+//     } 
+//     return res.status(400).send({ message: "email is not correct!!!" });
+//   }
+//   catch (error) {
+//     return res.status(500).send({ message: "Internal Sever Error" });
+//   }
+// }
+
 module.exports = { login, singnup, logout };
+
+

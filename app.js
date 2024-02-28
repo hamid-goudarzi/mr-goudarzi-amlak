@@ -8,6 +8,7 @@ const path = require("path");
 const logger = require("./middlewares/loggerMiddleware");
 const morgan = require('morgan')
 const fs = require('fs')
+require('dotenv').config()
 
 //  todo
 app.use(cors())
@@ -15,25 +16,20 @@ app.use(cors())
 app.use("/public/uploads/properties", express.static(path.join(__dirname, "public/uploads/properties")));
  
 
-require('dotenv').config()
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 mongoose.connect('mongodb://127.0.0.1:27017/amlak_db')
-  .then(() => console.log('DB Connected!'));
+//   .then(() => console.log('DB Connected!'));
 
   // create a write stream (in append mode)
 var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),
  { flags: 'a' })
 // app.use(logger);
+
 app.use( morgan("combined", { stream: accessLogStream }))
 app.use(indexRouter);
 
 
-
-
-const port=process.env.PORT;
-
-app.listen(port,()=>{
-    console.log(`server is runnig on port: ${port}`);
-})
+module.exports = app;
